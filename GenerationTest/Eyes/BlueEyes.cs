@@ -1,5 +1,6 @@
 namespace GenerationTest
 {
+    [RandomableEyes]
     class BlueEyes : Eyes
     {
         public BlueEyes()

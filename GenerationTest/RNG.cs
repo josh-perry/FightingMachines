@@ -13,7 +13,9 @@ namespace GenerationTest
 
         private string[] male_names;
         private string[] female_names;
+
         private List<string> hairs = new List<string>();
+        private List<string> eyes = new List<string>(); 
 
         private Assembly assembly;
 
@@ -29,6 +31,12 @@ namespace GenerationTest
 
             assembly = typeof (RNG).Assembly;
 
+            GetHair();
+            GetEyes();
+        }
+
+        private void GetHair()
+        {
             var e =
                 AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(a => a.GetTypes(), (a, t) => new { a, t })
@@ -38,6 +46,20 @@ namespace GenerationTest
             foreach (var h in e.ToList())
             {
                 hairs.Add(h.FullName);
+            }
+        }
+
+        private void GetEyes()
+        {
+            var e =
+                AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(a => a.GetTypes(), (a, t) => new { a, t })
+                    .Where(@t1 => @t1.t.IsDefined(typeof(RandomableEyes), false))
+                    .Select(@t1 => @t1.t);
+
+            foreach (var h in e.ToList())
+            {
+                eyes.Add(h.FullName);
             }
         }
 
@@ -73,6 +95,14 @@ namespace GenerationTest
             var hair = hairs[className];
 
             return (Hair)Activator.CreateInstance(assembly.GetType(hair));
+        }
+
+        public Eyes RandEyes()
+        {
+            var className = RandInt(0, eyes.Count);
+            var eye = eyes[className];
+
+            return (Eyes)Activator.CreateInstance(assembly.GetType(eye));
         }
 
         public static RNG Instance

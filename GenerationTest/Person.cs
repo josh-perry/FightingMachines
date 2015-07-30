@@ -20,23 +20,23 @@ namespace GenerationTest
 
         public Person(Person mother, Person father)
         {
+            DetermineGender();
+
             // Calculate genes
             Hair = (Hair) FightGenes(mother.Hair, father.Hair);
             Eyes = (Eyes) FightGenes(mother.Eyes, father.Eyes);
             Name = RNG.Instance.RandName(Gender);
 
-            DetermineGender();
-
             Age = 0;
         }
 
         public Person()
-        { 
+        {
+            DetermineGender();
+
             Hair = RandomHair();
             Eyes = RandomEyes();
             Name = RNG.Instance.RandName(Gender);
-
-            DetermineGender();
 
             Age = RNG.Instance.RandInt(5, 60);
         }
@@ -77,7 +77,6 @@ namespace GenerationTest
             else if (SignificantOther == null)
             {
                 throw new Exception("No-one to make baby with!"); // teehee
-                return null;
             }
 
             Person baby;
@@ -137,13 +136,7 @@ namespace GenerationTest
 
         public Eyes RandomEyes()
         {
-            var eyes = new List<Eyes>();
-            eyes.Add(new HazelEyes());
-            eyes.Add(new BlueEyes());
-
-            var r = RNG.Instance.RandInt(0, eyes.Count);
-
-            return eyes[r];
+            return RNG.Instance.RandEyes();
         }
 
         public void AdvanceAge()
@@ -152,7 +145,7 @@ namespace GenerationTest
 
             const float increase = 0.5f;
 
-            var min = 1;
+            // Maybe use actual maths for this
             var max = 100 - (Age/increase);
             if (max < 2)
                 max = 2;

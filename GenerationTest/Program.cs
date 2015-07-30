@@ -110,8 +110,19 @@ namespace GenerationTest
                 // If true, make babies
                 if (!person.PregnancyCheck()) continue;
 
-                var baby = person.MakeBaby(person.SignificantOther);
-                people.Add(baby);
+                try
+                {
+                    var baby = person.MakeBaby(person.SignificantOther);
+                    people.Add(baby);
+                }
+                catch (Exception e)
+                {
+                    // Something went awry, mister and miss probably aren't a good couple
+                    person.SignificantOther.SignificantOther = null;
+                    person.SignificantOther = null;
+
+                    Console.WriteLine(e);
+                }
             }
         }
 
