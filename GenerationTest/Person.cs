@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using GenerationTest.LifeEvents;
 
 namespace GenerationTest
 {
-    class Person
+    public class Person
     {
         public Gender Gender;
         public int Age;
@@ -22,7 +23,9 @@ namespace GenerationTest
         public List<Relationship> Children = new List<Relationship>();
         public List<Relationship> Siblings = new List<Relationship>();
 
-        public Person(Person mother, Person father)
+        public List<LifeEvent> LifeEvents = new List<LifeEvent>(); 
+
+        public Person(Person mother = null, Person father = null)
         {
             DetermineGender();
             
@@ -38,6 +41,8 @@ namespace GenerationTest
                 Hair = RandomHair();
                 Eyes = RandomEyes();
                 Age = RNG.Instance.RandInt(16, 60);
+
+                AddLifeEvent(new Birth { Year = TimeManager.Year - Age});
             }
 
             Name = RNG.Instance.RandName(Gender);
@@ -117,8 +122,15 @@ namespace GenerationTest
                 Person = father,
                 RelationType = Relation.Father
             };
-
+            
+            baby.AddLifeEvent(new Birth { Year = TimeManager.Year });
             return baby;
+        }
+
+        public void AddLifeEvent(LifeEvent le)
+        {
+            le.MainPerson = this;
+            LifeEvents.Add(le);
         }
 
         // I was never very good at biology. I'm p sure this is how genetics work.
@@ -182,22 +194,27 @@ namespace GenerationTest
         {
             // Do something with this maybe: http://www.medicine.ox.ac.uk/bandolier/booth/Risk/dyingage.html
             // For now:
-            return 200;
+            return 300;
         }
 
         private void Die()
         {
             // Widowmaker
-            if(Spouse != null)
+            if (Spouse != null)
                 Spouse.Person.Spouse = null;
 
             Dead = true;
+            AddLifeEvent(new Death());
         }
+        
 
         public bool PregnancyCheck()
         {
             // If not a girl or is single, assume not pregnant
             if (Gender != Gender.Female || Spouse.Person == null)
+                return false;
+
+            if (Children.Count >= 2)
                 return false;
 
             if (Pregnant)

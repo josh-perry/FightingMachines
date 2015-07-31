@@ -27,15 +27,16 @@ namespace GenerationTest
             }
 
             DateNight();
-
-            OutputStats();
-
-            //while (true)
+            
             for(var y = 0; y < 1000; y++)
             {
                 Console.WriteLine("Year {0}", y);
                 Console.ReadKey();
                 AdvanceYear();
+
+                OutputStats();
+
+                TimeManager.AdvanceYear();
             }
         }
 

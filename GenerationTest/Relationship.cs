@@ -1,6 +1,6 @@
 ﻿namespace GenerationTest
 {
-    class Relationship
+    public class Relationship
     {
         public Relation RelationType;
         public int Friendliness = 0;
@@ -8,7 +8,7 @@
         public Person Person;
     }
 
-    enum Relation
+    public enum Relation
     {
         Sibling,
         Spouse,

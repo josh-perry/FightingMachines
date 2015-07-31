@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace GenerationTest.LifeEvents
+{
+    public class Birth : LifeEvent
+    {
+        public Birth(Person mainPerson = null, List<Person> people = null)
+        {
+            Title = "Birth";
+
+            MainPerson = mainPerson;
+            RelatedPeople = people;
+        }
+
+        public new string Description
+        {
+            get
+            {
+                try
+                {
+                    return
+                        $"{MainPerson.Name} was born to parents {MainPerson.Mother.Person.Name} and {MainPerson.Father.Person.Name} in the year {Year}.";
+                }
+                catch (NullReferenceException)
+                {
+                    return $"{MainPerson.Name} was born in the year {Year}.";
+                }
+            }
+            set { }
+        }
+    }
+}
