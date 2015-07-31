@@ -1,4 +1,4 @@
-﻿namespace GenerationTest
+﻿namespace FightingMachines
 {
     public enum Gender
     {

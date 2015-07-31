@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GenerationTest
+namespace FightingMachines
 {
     public abstract class Hair : Gene
     {

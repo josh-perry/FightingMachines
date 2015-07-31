@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GenerationTest.LifeEvents
+namespace FightingMachines.LifeEvents
 {
     public class Birth : LifeEvent
     {

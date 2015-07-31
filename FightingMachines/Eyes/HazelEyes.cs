@@ -1,4 +1,4 @@
-﻿namespace GenerationTest
+﻿namespace FightingMachines
 {
     [RandomableEyes]
     class HazelEyes : Eyes

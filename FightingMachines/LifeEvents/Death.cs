@@ -1,4 +1,4 @@
-﻿namespace GenerationTest.LifeEvents
+﻿namespace FightingMachines.LifeEvents
 {
     class Death : LifeEvent
     {

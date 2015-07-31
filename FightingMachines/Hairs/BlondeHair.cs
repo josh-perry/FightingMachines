@@ -1,4 +1,4 @@
-﻿namespace GenerationTest
+﻿namespace FightingMachines
 {
     [RandomableHair]
     class BlondeHair : Hair

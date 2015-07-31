@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using GenerationTest.LifeEvents;
+using FightingMachines.LifeEvents;
 
-namespace GenerationTest
+namespace FightingMachines
 {
     public class Person
     {

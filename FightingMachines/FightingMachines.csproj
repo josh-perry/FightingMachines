@@ -7,8 +7,8 @@
     <ProjectGuid>{F2B1E4DE-5D25-4CE1-B5F3-C305665FBD90}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GenerationTest</RootNamespace>
-    <AssemblyName>GenerationTest</AssemblyName>
+    <RootNamespace>FightingMachines</RootNamespace>
+    <AssemblyName>FightingMachines</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GenerationTest
+namespace FightingMachines
 {
     public class LifeEvent
     {
