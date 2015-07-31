@@ -5,7 +5,7 @@
         public Relation RelationType;
         public int Friendliness = 0;
 
-        public Person OtherPerson;
+        public Person Person;
     }
 
     enum Relation
@@ -14,6 +14,7 @@
         Spouse,
         Father,
         Mother,
-        Child
+        Child,
+        Friend
     }
 }

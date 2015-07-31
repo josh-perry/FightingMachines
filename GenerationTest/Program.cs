@@ -14,17 +14,16 @@ namespace GenerationTest
 
     class GenePool
     {
-        public List<Person> people;
+        public List<Person> People;
         public int AgeOfConsent = 16;
 
         public GenePool(int size)
         {
-            people = new List<Person>();
+            People = new List<Person>();
 
             for (var i = 0; i < size; i++)
             {
-                var p = new Person(null, null);
-                people.Add(p);
+                People.Add(new Person(null, null));
             }
 
             DateNight();
@@ -54,7 +53,7 @@ namespace GenerationTest
 
         private void DateNight()
         {
-            var eligiblePeople = people.FindAll(x => x.Spouse == null);
+            var eligiblePeople = People.FindAll(x => x.Spouse == null);
             var eligibleMales = eligiblePeople.FindAll(x => x.Gender == Gender.Male && x.Age >= AgeOfConsent);
             var eligibleFemales = eligiblePeople.FindAll(x => x.Gender == Gender.Female && x.Age >= AgeOfConsent);
 
@@ -94,14 +93,14 @@ namespace GenerationTest
 
                 if (fail) continue;
 
-                eligibleFemales.Remove(person.Spouse.OtherPerson);
+                eligibleFemales.Remove(person.Spouse.Person);
             }
         }
 
         private void AdvanceAges()
         {
             var deadPeople = new List<Person>();
-            foreach (var person in people)
+            foreach (var person in People)
             {
                 person.AdvanceAge();
 
@@ -115,27 +114,27 @@ namespace GenerationTest
             // Clean up corpses
             foreach (var person in deadPeople)
             {
-                people.Remove(person);
+                People.Remove(person);
             }
         }
 
         private void Births()
         {
-            foreach (var person in people.FindAll(x => x.Gender == Gender.Female && x.Spouse != null))
+            foreach (var person in People.FindAll(x => x.Gender == Gender.Female && x.Spouse != null))
             {
                 // If true, make babies
                 if (!person.PregnancyCheck()) continue;
 
                 try
                 {
-                    var baby = person.MakeBaby(person.Spouse.OtherPerson);
-                    people.Add(baby);
+                    var baby = person.MakeBaby(person.Spouse.Person);
+                    People.Add(baby);
                 }
                 catch (Exception e)
                 {
                     // Something went awry, mister and miss probably aren't a good couple
-                    person.Spouse.OtherPerson.Spouse = null;
-                    person.Spouse.OtherPerson = null;
+                    person.Spouse.Person.Spouse = null;
+                    person.Spouse.Person = null;
 
                     Console.WriteLine(e);
                 }
@@ -144,13 +143,13 @@ namespace GenerationTest
 
         private void OutputStats()
         {
-            var males = people.FindAll(x => x.Gender == Gender.Male);
-            var females = people.FindAll(x => x.Gender == Gender.Female);
+            var males = People.FindAll(x => x.Gender == Gender.Male);
+            var females = People.FindAll(x => x.Gender == Gender.Female);
             var eligibleMales = males.FindAll(x => x.Spouse == null);
             var eligibleFemales = females.FindAll(x => x.Spouse == null);
 
             Console.WriteLine("All");
-            Console.WriteLine("\tTotal:        " + people.Count);
+            Console.WriteLine("\tTotal:        " + People.Count);
             Console.WriteLine("");
             Console.WriteLine("Males");
             Console.WriteLine("\tTotal:        " + males.Count);
