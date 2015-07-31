@@ -18,29 +18,29 @@ namespace GenerationTest
         public bool Dead { get; set; }
         public bool Pregnant { get; set; }
 
-        public Person(Person mother, Person father)
+        public Person(Person mother = null, Person father = null)
         {
             DetermineGender();
+            
+            if (mother != null && father != null)
+            {
+                // Calculate genes based on parents
+                Hair = (Hair) FightGenes(mother.Hair, father.Hair);
+                Eyes = (Eyes) FightGenes(mother.Eyes, father.Eyes);
+            }
+            else // No parents: generate randomly
+            {
+                Hair = RandomHair();
+                Eyes = RandomEyes();
+                Age = RNG.Instance.RandInt(16, 60);
+            }
 
-            // Calculate genes
-            Hair = (Hair) FightGenes(mother.Hair, father.Hair);
-            Eyes = (Eyes) FightGenes(mother.Eyes, father.Eyes);
+
             Name = RNG.Instance.RandName(Gender);
 
             Age = 0;
         }
-
-        public Person()
-        {
-            DetermineGender();
-
-            Hair = RandomHair();
-            Eyes = RandomEyes();
-            Name = RNG.Instance.RandName(Gender);
-
-            Age = RNG.Instance.RandInt(5, 60);
-        }
-
+        
         public void DetermineGender()
         {
             Gender = Gender.Female;
