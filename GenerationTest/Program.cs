@@ -7,7 +7,7 @@ namespace GenerationTest
     {
         static void Main(string[] args)
         {
-            var sim = new GenePool(10);
+            var sim = new GenePool(1000);
         }
     }
 
@@ -16,18 +16,38 @@ namespace GenerationTest
         public List<Person> people;
         public int AgeOfConsent = 16;
 
+        private int _yearDeaths = 0;
+        private int _yearBirths = 0;
+
         public GenePool(int size)
         {
             people = new List<Person>();
-            var eligiblePeople = new List<Person>();
 
             for (var i = 0; i < size; i++)
             {
                 var p = new Person();
                 people.Add(p);
-                eligiblePeople.Add(p);
             }
 
+            FindSpouses();
+
+            OutputStats();
+
+            var year = 0;
+            while (true)
+            {
+                Console.WriteLine("Year {0}", year);
+                Console.ReadKey();
+                AdvanceYear();
+                year++;
+
+                Console.WriteLine("{0} deaths, {1} births in the last year", _yearDeaths, _yearBirths);
+            }
+        }
+
+        private void FindSpouses()
+        {
+            var eligiblePeople = people.FindAll(x => x.SignificantOther == null);
             var eligibleMales = eligiblePeople.FindAll(x => x.Gender == Gender.Male && x.Age >= AgeOfConsent);
             var eligibleFemales = eligiblePeople.FindAll(x => x.Gender == Gender.Female && x.Age >= AgeOfConsent);
 
@@ -54,20 +74,9 @@ namespace GenerationTest
                         fail = false;
                 }
 
-                if(fail) continue;
+                if (fail) continue;
 
                 eligibleFemales.Remove(person.SignificantOther);
-            }
-
-            OutputStats();
-
-            var year = 0;
-            while (true)
-            {
-                Console.WriteLine("Year {0}", year);
-                Console.ReadKey();
-                AdvanceYear();
-                year++;
             }
         }
 
@@ -80,6 +89,7 @@ namespace GenerationTest
             Births();
 
             // New spouses
+            FindSpouses();
         }
 
         private void AdvanceAges()
@@ -95,6 +105,9 @@ namespace GenerationTest
                     deadPeople.Add(person);
                 }
             }
+            
+            // Assess damage
+            _yearDeaths = deadPeople.Count;
 
             // Clean up corpses
             foreach (var person in deadPeople)
@@ -105,6 +118,8 @@ namespace GenerationTest
 
         private void Births()
         {
+            _yearBirths = 0;
+
             foreach (var person in people.FindAll(x => x.Gender == Gender.Female && x.SignificantOther != null))
             {
                 // If true, make babies
@@ -114,6 +129,7 @@ namespace GenerationTest
                 {
                     var baby = person.MakeBaby(person.SignificantOther);
                     people.Add(baby);
+                    _yearBirths++;
                 }
                 catch (Exception e)
                 {

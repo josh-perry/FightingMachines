@@ -56,12 +56,12 @@ namespace GenerationTest
             // Half your age plus 7 rules
             if ((Age/2) + 7 > other.Age)
             {
-                Console.WriteLine("{0} is too young for {1} ({2} vs {3})", other.Name, Name, other.Age, Age);
+                //Console.WriteLine("{0} is too young for {1} ({2} vs {3})", other.Name, Name, other.Age, Age);
                 return false;
             }
             if ((other.Age / 2) + 7 > Age)
             {
-                Console.WriteLine("{0} is too old for {1} ({2} vs {3})", other.Name, Name, other.Age, Age);
+                //Console.WriteLine("{0} is too old for {1} ({2} vs {3})", other.Name, Name, other.Age, Age);
                 return false;
             }
 
@@ -94,6 +94,7 @@ namespace GenerationTest
             return baby;
         }
 
+        // I was never very good at biology. I'm p sure this is how genetics work.
         public Gene FightGenes(Gene gene1, Gene gene2)
         {
             var rng = new Random();
@@ -104,7 +105,7 @@ namespace GenerationTest
             {
                 if(gene1 is Eyes)
                     return RandomEyes();
-                else if(gene1 is Hair)
+                if(gene1 is Hair)
                     return RandomHair();
             }
 
@@ -143,17 +144,18 @@ namespace GenerationTest
         {
             Age++;
 
-            const float increase = 0.5f;
-
-            // Maybe use actual maths for this
-            var max = 100 - (Age/increase);
-            if (max < 2)
-                max = 2;
-
-            if (RNG.Instance.RandInt(1, (int) max) == 1)
+            var oneInX = CalculateDeathOdds();
+            if (RNG.Instance.RandInt(1, oneInX) == 1)
             {
                 Die();
             }
+        }
+
+        private int CalculateDeathOdds()
+        {
+            // Do something with this maybe: http://www.medicine.ox.ac.uk/bandolier/booth/Risk/dyingage.html
+            // For now:
+            return 200;
         }
 
         private void Die()
@@ -174,7 +176,7 @@ namespace GenerationTest
             if (Pregnant)
                 return true;
 
-            if (RNG.Instance.RandInt(1, 5) == 1)
+            if (RNG.Instance.RandInt(1, 20) == 1)
             {
                 Console.WriteLine("{0} has fallen pregnant with {1}.", Name, SignificantOther.Name);
                 Pregnant = true;    
