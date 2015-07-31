@@ -7,7 +7,8 @@ namespace GenerationTest
     {
         static void Main(string[] args)
         {
-            var sim = new GenePool(1000);
+            var sim = new GenePool(100);
+            Console.ReadKey();
         }
     }
 
@@ -16,67 +17,26 @@ namespace GenerationTest
         public List<Person> people;
         public int AgeOfConsent = 16;
 
-        private int _yearDeaths = 0;
-        private int _yearBirths = 0;
-
         public GenePool(int size)
         {
             people = new List<Person>();
 
             for (var i = 0; i < size; i++)
             {
-                var p = new Person();
+                var p = new Person(null, null);
                 people.Add(p);
             }
 
-            FindSpouses();
+            DateNight();
 
             OutputStats();
 
-            var year = 0;
-            while (true)
+            //while (true)
+            for(var y = 0; y < 1000; y++)
             {
-                Console.WriteLine("Year {0}", year);
+                Console.WriteLine("Year {0}", y);
                 Console.ReadKey();
                 AdvanceYear();
-                year++;
-
-                Console.WriteLine("{0} deaths, {1} births in the last year", _yearDeaths, _yearBirths);
-            }
-        }
-
-        private void FindSpouses()
-        {
-            var eligiblePeople = people.FindAll(x => x.SignificantOther == null);
-            var eligibleMales = eligiblePeople.FindAll(x => x.Gender == Gender.Male && x.Age >= AgeOfConsent);
-            var eligibleFemales = eligiblePeople.FindAll(x => x.Gender == Gender.Female && x.Age >= AgeOfConsent);
-
-            foreach (var person in eligibleMales)
-            {
-                // Always assume failure
-                var fail = true;
-
-                // 10 hot dates, 10 chances
-                for (var i = 0; i < 10; i++)
-                {
-                    var otherPerson = eligibleFemales[RNG.Instance.RandInt(0, eligibleFemales.Count)];
-
-                    // If already taken, remain taken
-                    if (person.SignificantOther != null)
-                        continue;
-
-                    // Adam and Eve, not Adam and Steve: remain single
-                    if (person.Gender == otherPerson.Gender)
-                        continue;
-
-                    // If the other person is him/herself or the first date didn't go well, remain single
-                    if (otherPerson.Equals(person) || !person.GiveSignificantOther(otherPerson))
-                        fail = false;
-                }
-
-                if (fail) continue;
-
-                eligibleFemales.Remove(person.SignificantOther);
             }
         }
 
@@ -89,7 +49,53 @@ namespace GenerationTest
             Births();
 
             // New spouses
-            FindSpouses();
+            DateNight();
+        }
+
+        private void DateNight()
+        {
+            var eligiblePeople = people.FindAll(x => x.Spouse == null);
+            var eligibleMales = eligiblePeople.FindAll(x => x.Gender == Gender.Male && x.Age >= AgeOfConsent);
+            var eligibleFemales = eligiblePeople.FindAll(x => x.Gender == Gender.Female && x.Age >= AgeOfConsent);
+
+            foreach (var person in eligibleMales)
+            {
+                // Always assume failure
+                var fail = true;
+
+                // 10 hot dates, 10 chances
+                for (var i = 0; i < 10; i++)
+                {
+                    var maximum = eligibleFemales.Count;
+
+                    if (maximum == 0)
+                        break;
+
+                    var otherPerson = eligibleFemales[RNG.Instance.RandInt(0, maximum)];
+
+                    // If already taken, remain taken
+                    if (person.Spouse != null)
+                        continue;
+
+                    // Adam and Eve, not Adam and Steve: remain single
+                    if (person.Gender == otherPerson.Gender)
+                        continue;
+
+                    // If the other person is him/herself or the first date didn't go well, remain single
+                    if (otherPerson.Equals(person))
+                        continue;
+
+                    if (person.GiveSignificantOther(otherPerson))
+                    {
+                        fail = false;
+                        break;
+                    }
+                }
+
+                if (fail) continue;
+
+                eligibleFemales.Remove(person.Spouse.OtherPerson);
+            }
         }
 
         private void AdvanceAges()
@@ -105,9 +111,6 @@ namespace GenerationTest
                     deadPeople.Add(person);
                 }
             }
-            
-            // Assess damage
-            _yearDeaths = deadPeople.Count;
 
             // Clean up corpses
             foreach (var person in deadPeople)
@@ -118,24 +121,21 @@ namespace GenerationTest
 
         private void Births()
         {
-            _yearBirths = 0;
-
-            foreach (var person in people.FindAll(x => x.Gender == Gender.Female && x.SignificantOther != null))
+            foreach (var person in people.FindAll(x => x.Gender == Gender.Female && x.Spouse != null))
             {
                 // If true, make babies
                 if (!person.PregnancyCheck()) continue;
 
                 try
                 {
-                    var baby = person.MakeBaby(person.SignificantOther);
+                    var baby = person.MakeBaby(person.Spouse.OtherPerson);
                     people.Add(baby);
-                    _yearBirths++;
                 }
                 catch (Exception e)
                 {
                     // Something went awry, mister and miss probably aren't a good couple
-                    person.SignificantOther.SignificantOther = null;
-                    person.SignificantOther = null;
+                    person.Spouse.OtherPerson.Spouse = null;
+                    person.Spouse.OtherPerson = null;
 
                     Console.WriteLine(e);
                 }
@@ -146,8 +146,8 @@ namespace GenerationTest
         {
             var males = people.FindAll(x => x.Gender == Gender.Male);
             var females = people.FindAll(x => x.Gender == Gender.Female);
-            var eligibleMales = males.FindAll(x => x.SignificantOther == null);
-            var eligibleFemales = females.FindAll(x => x.SignificantOther == null);
+            var eligibleMales = males.FindAll(x => x.Spouse == null);
+            var eligibleFemales = females.FindAll(x => x.Spouse == null);
 
             Console.WriteLine("All");
             Console.WriteLine("\tTotal:        " + people.Count);

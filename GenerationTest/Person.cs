@@ -8,8 +8,6 @@ namespace GenerationTest
     {
         public Gender Gender;
         public int Age;
-        public Person SignificantOther;
-
         public string Name;
 
         public Eyes Eyes;
@@ -18,7 +16,13 @@ namespace GenerationTest
         public bool Dead { get; set; }
         public bool Pregnant { get; set; }
 
-        public Person(Person mother = null, Person father = null)
+        public Relationship Mother;
+        public Relationship Father;
+        public Relationship Spouse;
+        public List<Relationship> Children = new List<Relationship>();
+        public List<Relationship> Siblings = new List<Relationship>();
+
+        public Person(Person mother, Person father)
         {
             DetermineGender();
             
@@ -27,6 +31,7 @@ namespace GenerationTest
                 // Calculate genes based on parents
                 Hair = (Hair) FightGenes(mother.Hair, father.Hair);
                 Eyes = (Eyes) FightGenes(mother.Eyes, father.Eyes);
+                Age = 0;
             }
             else // No parents: generate randomly
             {
@@ -35,10 +40,7 @@ namespace GenerationTest
                 Age = RNG.Instance.RandInt(16, 60);
             }
 
-
             Name = RNG.Instance.RandName(Gender);
-
-            Age = 0;
         }
         
         public void DetermineGender()
@@ -50,7 +52,7 @@ namespace GenerationTest
 
         public bool GiveSignificantOther(Person other)
         {
-            if (other.SignificantOther != null && other.SignificantOther.Equals(this))
+            if (other.Spouse != null && other.Spouse.OtherPerson.Equals(this))
                 return false;
 
             // Half your age plus 7 rules
@@ -65,31 +67,56 @@ namespace GenerationTest
                 return false;
             }
 
-            SignificantOther = other;
-            other.SignificantOther = this;
+            Spouse = new Relationship { OtherPerson = other };
+            Spouse.OtherPerson.Spouse = new Relationship { OtherPerson = this };
+            
             return true;
         }
 
         public Person MakeBaby(Person other)
         {
-            if (other == null && SignificantOther != null)
-                other = SignificantOther;
-            else if (SignificantOther == null)
+            if (other == null && Spouse.OtherPerson != null)
+                other = Spouse.OtherPerson;
+            else if (Spouse.OtherPerson == null)
             {
                 throw new Exception("No-one to make baby with!"); // teehee
             }
 
-            Person baby;
-            if (Gender == Gender.Female)
-                baby = new Person(mother: this, father: other);
-            else
-                baby = new Person(mother: other, father: this);
+            if (other == null)
+                throw new Exception("No-one to make baby with!");
 
+            Person mother;
+            Person father;
+            if (Gender == Gender.Female)
+            {
+                father = other;
+                mother = this;
+            }
+            else
+            {
+                father = this;
+                mother = other;
+            }
+
+            var baby = new Person(mother, father);
             
-            Console.WriteLine("{0} and {1} are the proud new parents of baby {2}!", Name, other.Name, baby.Name);
+            Console.WriteLine("{0} and {1} are the proud new parents of baby {2}!", mother.Name, father.Name, baby.Name);
             
             Pregnant = false;
             other.Pregnant = false;
+
+            Children.Add(new Relationship { OtherPerson = baby, RelationType = Relation.Child });
+            baby.Mother = new Relationship
+            {
+                OtherPerson = mother,
+                RelationType = Relation.Mother
+            };
+
+            baby.Father = new Relationship
+            {
+                OtherPerson = father,
+                RelationType = Relation.Father
+            };
 
             return baby;
         }
@@ -161,8 +188,8 @@ namespace GenerationTest
         private void Die()
         {
             // Widowmaker
-            if(SignificantOther != null)
-                SignificantOther.SignificantOther = null;
+            if(Spouse != null)
+                Spouse.OtherPerson.Spouse = null;
 
             Dead = true;
         }
@@ -170,7 +197,7 @@ namespace GenerationTest
         public bool PregnancyCheck()
         {
             // If not a girl or is single, assume not pregnant
-            if (Gender != Gender.Female || SignificantOther == null)
+            if (Gender != Gender.Female || Spouse.OtherPerson == null)
                 return false;
 
             if (Pregnant)
@@ -178,7 +205,7 @@ namespace GenerationTest
 
             if (RNG.Instance.RandInt(1, 20) == 1)
             {
-                Console.WriteLine("{0} has fallen pregnant with {1}.", Name, SignificantOther.Name);
+                Console.WriteLine("{0} has fallen pregnant with {1}.", Name, Spouse.OtherPerson.Name);
                 Pregnant = true;    
             }
 
