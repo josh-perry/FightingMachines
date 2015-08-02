@@ -6,7 +6,7 @@ namespace FightingMachines
     {
         public string Title { get; set; }
         public int Year { get; set; }
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
 
         public Person MainPerson { get; set; }
         public List<Person> RelatedPeople { get; set; }

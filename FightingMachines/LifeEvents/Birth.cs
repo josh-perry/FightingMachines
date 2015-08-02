@@ -13,14 +13,13 @@ namespace FightingMachines.LifeEvents
             RelatedPeople = people;
         }
 
-        public new string Description
+        public override string Description
         {
             get
             {
                 try
                 {
-                    return
-                        $"{MainPerson.Name} was born to parents {MainPerson.Mother.Person.Name} and {MainPerson.Father.Person.Name} in the year {Year}.";
+                    return $"{MainPerson.Name} was born to parents {MainPerson.Mother.Person.Name} and {MainPerson.Father.Person.Name} in the year {Year}.";
                 }
                 catch (NullReferenceException)
                 {

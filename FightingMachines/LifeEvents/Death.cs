@@ -10,9 +10,9 @@
             Year = TimeManager.Year;
         }
 
-        public new string Description
+        public override string Description
         {
-            get { return $"{MainPerson.Name} died of natural causes in the year {TimeManager.Year} at age {MainPerson.Age}"; }
+            get { return $"{MainPerson.Name} died of natural causes in the year {Year} at age {MainPerson.Age}"; }
             set { }
         }
     }
