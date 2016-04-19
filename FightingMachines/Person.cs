@@ -70,7 +70,12 @@ namespace FightingMachines
         /// <summary>
         /// A list of all significant events across the person's lifespan.
         /// </summary>
-        public List<LifeEvent> LifeEvents = new List<LifeEvent>(); 
+        public List<LifeEvent> LifeEvents = new List<LifeEvent>();
+
+        /// <summary>
+        /// Does this person have no surviviing parents?
+        /// </summary>
+        public bool Orphaned { get; set; }
 
         /// <summary>
         /// Create a new person from mother + father's genes or entirely
@@ -102,7 +107,39 @@ namespace FightingMachines
 
             Name = Rng.Instance.RandName(Gender);
         }
+
+        /// <summary>
+        /// Empty constructor.
+        /// </summary>
+        public Person()
+        {
+            
+        }
         
+        /// <summary>
+        /// Set this person to be orphaned if there are no surviving parents.
+        /// </summary>
+        public void CheckOrphanStatus()
+        {
+            // If they are already orphaned, don't bother checking again!
+            if (Orphaned)
+                return;
+            
+            // If they have no existing mother and father, then orphan them
+            if (Mother == null && Father == null)
+            {
+                Orphaned = true;
+            }
+
+            if (Mother == null || Mother.Person.Dead)
+            {
+                if (Father == null || Father.Person.Dead)
+                {
+                    Orphaned = true;
+                }
+            }
+        }
+
         /// <summary>
         /// Assign them a gender randomly.
         /// </summary>
@@ -111,7 +148,7 @@ namespace FightingMachines
             Gender = Gender.Female;
 
             if (Rng.Instance.RandInt(0, 2) == 1)
-                Gender = Gender.Male;  
+                Gender = Gender.Male;
         }
 
         /// <summary>
@@ -153,13 +190,13 @@ namespace FightingMachines
             if (other == null && Spouse.Person != null)
                 other = Spouse.Person;
 
-            else if (Spouse.Person == null)
-            {
-                throw new Exception("No-one to make baby with!"); // teehee
-            }
+            //else if (Spouse.Person == null)
+            //{
+            //    throw new Exception("No-one to make baby with!"); // teehee
+            //}
 
-            if (other == null)
-                throw new Exception("No-one to make baby with!");
+            //if (other == null)
+            //    throw new Exception("No-one to make baby with!");
 
             Person mother;
             Person father;

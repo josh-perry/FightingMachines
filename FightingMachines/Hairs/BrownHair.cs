@@ -1,7 +1,7 @@
 ﻿namespace FightingMachines
 {
     [RandomableHair]
-    class BrownHair : Hair
+    public class BrownHair : Hair
     {
         public BrownHair()
         {

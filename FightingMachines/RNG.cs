@@ -8,12 +8,6 @@ namespace FightingMachines
 {
     public class Rng
     {
-        // ReSharper disable once InconsistentNaming
-        /// <summary>
-        /// Singleton shenanigans.
-        /// </summary>
-        private static readonly Rng instance = new Rng();
-
         /// <summary>
         /// Random object to generate numbers from.
         /// </summary>
@@ -43,7 +37,7 @@ namespace FightingMachines
         /// The current assembly. Used for reflection.
         /// </summary>
         private readonly Assembly _assembly;
-
+        
         /// <summary>
         /// Constructor sets up the RNG and initializes the lists.
         /// </summary>
@@ -97,8 +91,21 @@ namespace FightingMachines
         /// </summary>
         private void LoadNames()
         {
-            _maleNames = File.ReadAllLines("data/male.txt");
-            _femaleNames = File.ReadAllLines("data/female.txt");
+            try
+            {
+                _maleNames = File.ReadAllLines("data/male.txt");
+                _femaleNames = File.ReadAllLines("data/female.txt");
+            }
+            catch (DirectoryNotFoundException)
+            {
+                _maleNames = new[] {"Guy"};
+                _femaleNames = new[] {"Girl"};
+            }
+            catch (FileNotFoundException)
+            {
+                _maleNames = new[] { "Guy" };
+                _femaleNames = new[] { "Girl" };
+            }
         }
 
         /// <summary>
@@ -163,12 +170,6 @@ namespace FightingMachines
         /// <summary>
         /// Singleton instance
         /// </summary>
-        public static Rng Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
+        public static Rng Instance { get; } = new Rng();
     }
 }

@@ -31,7 +31,7 @@ namespace FightingMachines
 
             for (var i = 0; i < size; i++)
             {
-                People.Add(new Person());
+                People.Add(new Person(null));
             }
 
             // Put them in fancy clothes and make them mingle
@@ -133,6 +133,7 @@ namespace FightingMachines
             foreach (var person in People)
             {
                 person.AdvanceAge(AgeOfConsent);
+                person.CheckOrphanStatus();
 
                 if (person.Dead)
                 {

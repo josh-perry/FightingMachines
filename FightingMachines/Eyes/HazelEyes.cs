@@ -1,7 +1,7 @@
 ﻿namespace FightingMachines
 {
     [RandomableEyes]
-    class HazelEyes : Eyes
+    public class HazelEyes : Eyes
     {
         public HazelEyes()
         {

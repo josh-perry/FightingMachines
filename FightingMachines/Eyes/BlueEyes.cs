@@ -1,7 +1,7 @@
 namespace FightingMachines
 {
     [RandomableEyes]
-    internal class BlueEyes : Eyes
+    public class BlueEyes : Eyes
     {
         public BlueEyes()
         {
