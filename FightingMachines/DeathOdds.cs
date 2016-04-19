@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FightingMachines
 {
-    static class DeathOdds
+    public static class DeathOdds
     {
         private static Dictionary<int, int> MaleOdds;
         private static Dictionary<int, int> FemaleOdds;
