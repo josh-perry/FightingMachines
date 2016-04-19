@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace FightingMachines
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main()
         {
-            var sim = new GenePool(100);
+            // ReSharper disable once ObjectCreationAsStatement
+            new GenePool(100);
+
             Console.ReadKey();
         }
     }

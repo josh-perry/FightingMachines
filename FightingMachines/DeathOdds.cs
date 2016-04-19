@@ -14,14 +14,14 @@ namespace FightingMachines
         /// age where the key is the max age boundary and the value is the
         /// chance.
         /// </summary>
-        private static Dictionary<int, int> MaleOdds;
+        private static readonly Dictionary<int, int> MaleOdds;
 
         /// <summary>
         /// A dictionary holding the chances of a female dying at a particular
         /// age where the key is the max age boundary and the value is the
         /// chance.
         /// </summary>
-        private static Dictionary<int, int> FemaleOdds;
+        private static readonly Dictionary<int, int> FemaleOdds;
 
         /// <summary>
         /// Constructor sets up the male and female death odd dictionaries.

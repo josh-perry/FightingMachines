@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using FightingMachines.LifeEvents;
 
 namespace FightingMachines
@@ -94,14 +93,14 @@ namespace FightingMachines
             }
             else // No parents: generate randomly
             {
-                Hair = RNG.Instance.RandHair();
-                Eyes = RNG.Instance.RandEyes();
-                Age = RNG.Instance.RandInt(16, 60);
+                Hair = Rng.Instance.RandHair();
+                Eyes = Rng.Instance.RandEyes();
+                Age = Rng.Instance.RandInt(16, 60);
 
                 AddLifeEvent(new Birth { Year = TimeManager.Year - Age});
             }
 
-            Name = RNG.Instance.RandName(Gender);
+            Name = Rng.Instance.RandName(Gender);
         }
         
         /// <summary>
@@ -111,7 +110,7 @@ namespace FightingMachines
         {
             Gender = Gender.Female;
 
-            if (RNG.Instance.RandInt(0, 2) == 1)
+            if (Rng.Instance.RandInt(0, 2) == 1)
                 Gender = Gender.Male;  
         }
 
@@ -226,9 +225,9 @@ namespace FightingMachines
             if (x >= 100)
             {
                 if(gene1 is Eyes)
-                    return RNG.Instance.RandEyes();
+                    return Rng.Instance.RandEyes();
                 if(gene1 is Hair)
-                    return RNG.Instance.RandHair();
+                    return Rng.Instance.RandHair();
             }
 
             var gene1Odds = 50;
@@ -258,12 +257,12 @@ namespace FightingMachines
         /// Also give them the AgeOfConsent life event if they are now old
         /// enough.
         /// </summary>
-        /// <param name="age_of_consent">The current age of consent.</param>
-        public void AdvanceAge(int age_of_consent)
+        /// <param name="ageOfConsent">The current age of consent.</param>
+        public void AdvanceAge(int ageOfConsent)
         {
             Age++;
 
-            if(Age == age_of_consent)
+            if(Age == ageOfConsent)
             {
                 // Reached age of consent!
                 Console.WriteLine($"{Name} came of age.");
@@ -271,7 +270,7 @@ namespace FightingMachines
             }
 
             var oneInX = DeathOdds.GetDeathChance(Age, Gender);
-            if (RNG.Instance.RandInt(1, oneInX) == 1)
+            if (Rng.Instance.RandInt(1, oneInX) == 1)
             {
                 Die();
             }
@@ -307,7 +306,7 @@ namespace FightingMachines
             if (Pregnant)
                 return true;
 
-            if (RNG.Instance.RandInt(1, 20) == 1)
+            if (Rng.Instance.RandInt(1, 20) == 1)
             {
                 Console.WriteLine("{0} has fallen pregnant with {1}.", Name, Spouse.Person.Name);
                 Pregnant = true;    

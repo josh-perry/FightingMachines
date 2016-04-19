@@ -27,7 +27,11 @@ namespace FightingMachines.LifeEvents
                     return $"{MainPerson.Name} was born in the year {Year}.";
                 }
             }
-            set { }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+            }
         }
     }
 }

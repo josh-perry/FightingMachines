@@ -1,4 +1,6 @@
-﻿namespace FightingMachines.LifeEvents
+﻿using System;
+
+namespace FightingMachines.LifeEvents
 {
     class Death : LifeEvent
     {
@@ -12,8 +14,15 @@
 
         public new string Description
         {
-            get { return $"{MainPerson.Name} died of natural causes in the year {TimeManager.Year} at age {MainPerson.Age}"; }
-            set { }
+            get
+            {
+                return $"{MainPerson.Name} died of natural causes in the year {TimeManager.Year} at age {MainPerson.Age}";
+            }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+            }
         }
     }
 }

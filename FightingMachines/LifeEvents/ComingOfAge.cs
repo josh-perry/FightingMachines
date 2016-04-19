@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FightingMachines.LifeEvents
 {
@@ -18,7 +19,11 @@ namespace FightingMachines.LifeEvents
             {
                 return $"{MainPerson.Name} came of age in the year {Year}.";
             }
-            set { }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+            }
         }
     }
 }

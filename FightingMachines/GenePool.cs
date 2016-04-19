@@ -96,7 +96,7 @@ namespace FightingMachines
                     if (maximum == 0)
                         break;
 
-                    var otherPerson = eligibleFemales[RNG.Instance.RandInt(0, maximum)];
+                    var otherPerson = eligibleFemales[Rng.Instance.RandInt(0, maximum)];
 
                     // If already taken, remain taken
                     if (person.Spouse != null)
