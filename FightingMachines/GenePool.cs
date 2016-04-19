@@ -100,7 +100,7 @@ namespace FightingMachines
             var deadPeople = new List<Person>();
             foreach (var person in People)
             {
-                person.AdvanceAge();
+                person.AdvanceAge(AgeOfConsent);
 
                 if (person.Dead)
                 {

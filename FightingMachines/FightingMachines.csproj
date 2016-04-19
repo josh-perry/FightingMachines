@@ -52,6 +52,7 @@
     <Compile Include="Eyes\HazelEyes.cs" />
     <Compile Include="LifeEvent.cs" />
     <Compile Include="LifeEvents\Birth.cs" />
+    <Compile Include="LifeEvents\ComingOfAge.cs" />
     <Compile Include="LifeEvents\Death.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />

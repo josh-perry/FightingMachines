@@ -179,15 +179,26 @@ namespace FightingMachines
             return RNG.Instance.RandEyes();
         }
 
-        public void AdvanceAge()
+        public void AdvanceAge(int age_of_consent)
         {
             Age++;
+
+            if(Age == age_of_consent)
+            {
+                ReachAgeOfConsent();
+            }
 
             var oneInX = CalculateDeathOdds();
             if (RNG.Instance.RandInt(1, oneInX) == 1)
             {
                 Die();
             }
+        }
+
+        private void ReachAgeOfConsent()
+        {
+            Console.WriteLine($"{Name} came of age.");
+            LifeEvents.Add(new ComingOfAge());
         }
 
         private int CalculateDeathOdds()
