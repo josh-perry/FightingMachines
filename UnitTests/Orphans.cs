@@ -15,14 +15,16 @@ namespace UnitTests
             {
                 Hair = new BrownHair(),
                 Eyes = new BlueEyes(),
-                Name = "Papa"
+                Name = "Papa",
+                Gender = Gender.Male
             };
 
             var mother = new Person
             {
                 Hair = new BlondeHair(),
                 Eyes = new HazelEyes(),
-                Name = "Mama"
+                Name = "Mama",
+                Gender = Gender.Female
             };
 
             var child = mother.MakeBaby(father);
@@ -44,14 +46,16 @@ namespace UnitTests
             {
                 Hair = new BrownHair(),
                 Eyes = new BlueEyes(),
-                Name = "Papa"
+                Name = "Papa",
+                Gender = Gender.Male
             };
 
             var mother = new Person
             {
                 Hair = new BlondeHair(),
                 Eyes = new HazelEyes(),
-                Name = "Mama"
+                Name = "Mama",
+                Gender = Gender.Female
             };
 
             var child = mother.MakeBaby(father);
@@ -75,14 +79,16 @@ namespace UnitTests
             {
                 Hair = new BrownHair(),
                 Eyes = new BlueEyes(),
-                Name = "Papa"
+                Name = "Papa",
+                Gender = Gender.Male
             };
 
             var mother = new Person
             {
                 Hair = new BlondeHair(),
                 Eyes = new HazelEyes(),
-                Name = "Mama"
+                Name = "Mama",
+                Gender = Gender.Female
             };
 
             var child = mother.MakeBaby(father);

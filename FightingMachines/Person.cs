@@ -190,13 +190,8 @@ namespace FightingMachines
             if (other == null && Spouse.Person != null)
                 other = Spouse.Person;
 
-            //else if (Spouse.Person == null)
-            //{
-            //    throw new Exception("No-one to make baby with!"); // teehee
-            //}
-
-            //if (other == null)
-            //    throw new Exception("No-one to make baby with!");
+            if (other == null)
+                throw new Exception("No-one to make baby with!");
 
             Person mother;
             Person father;

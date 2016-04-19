@@ -53,6 +53,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BabyMaking.cs" />
     <Compile Include="DeathOdds.cs" />
     <Compile Include="Orphans.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
