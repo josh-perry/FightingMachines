@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeathOdds.cs" />
     <Compile Include="GenePool.cs" />
     <Compile Include="Hairs\BlondeHair.cs" />
     <Compile Include="Eyes\BlueEyes.cs" />

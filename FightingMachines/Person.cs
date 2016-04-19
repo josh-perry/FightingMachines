@@ -203,9 +203,7 @@ namespace FightingMachines
 
         private int CalculateDeathOdds()
         {
-            // Do something with this maybe: http://www.medicine.ox.ac.uk/bandolier/booth/Risk/dyingage.html
-            // For now:
-            return 300;
+            return DeathOdds.GetDeathChance(Age, Gender);
         }
 
         private void Die()
