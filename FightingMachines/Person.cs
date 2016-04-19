@@ -7,28 +7,84 @@ namespace FightingMachines
 {
     public class Person
     {
+        /// <summary>
+        /// The person's gender, determines who they can date, death rate,
+        /// whether they can get pregnant etc. etc.
+        /// </summary>
         public Gender Gender;
+
+        /// <summary>
+        /// How old the person is in years.
+        /// </summary>
         public int Age;
+
+        /// <summary>
+        /// Their first name.
+        /// </summary>
         public string Name;
 
+        /// <summary>
+        /// Gene that determines their eyes.
+        /// </summary>
         public Eyes Eyes;
+
+        /// <summary>
+        /// Gene that determines their hair.
+        /// </summary>
         public Hair Hair;
 
+        /// <summary>
+        /// Do they breathe?
+        /// </summary>
         public bool Dead { get; set; }
+
+        /// <summary>
+        /// Do they have a tiny adorable parasite?
+        /// </summary>
         public bool Pregnant { get; set; }
 
+        /// <summary>
+        /// Reference to the person's mother.
+        /// </summary>
         public Relationship Mother;
+
+        /// <summary>
+        /// Reference to the person's father.
+        /// </summary>
         public Relationship Father;
+
+        /// <summary>
+        /// Reference to the person's significant other.
+        /// </summary>
         public Relationship Spouse;
+
+        /// <summary>
+        /// List of offspring people.
+        /// </summary>
         public List<Relationship> Children = new List<Relationship>();
+
+        /// <summary>
+        /// List of brothers and sisters.
+        /// </summary>
         public List<Relationship> Siblings = new List<Relationship>();
 
+        /// <summary>
+        /// A list of all significant events across the person's lifespan.
+        /// </summary>
         public List<LifeEvent> LifeEvents = new List<LifeEvent>(); 
 
+        /// <summary>
+        /// Create a new person from mother + father's genes or entirely
+        /// randomly if there is no mother/father.
+        /// </summary>
+        /// <param name="mother">The mother</param>
+        /// <param name="father">The father</param>
         public Person(Person mother = null, Person father = null)
         {
+            // Impose role
             DetermineGender();
             
+            // If there is a mother and father, create person using their genes as a base
             if (mother != null && father != null)
             {
                 // Calculate genes based on parents
@@ -38,8 +94,8 @@ namespace FightingMachines
             }
             else // No parents: generate randomly
             {
-                Hair = RandomHair();
-                Eyes = RandomEyes();
+                Hair = RNG.Instance.RandHair();
+                Eyes = RNG.Instance.RandEyes();
                 Age = RNG.Instance.RandInt(16, 60);
 
                 AddLifeEvent(new Birth { Year = TimeManager.Year - Age});
@@ -48,13 +104,25 @@ namespace FightingMachines
             Name = RNG.Instance.RandName(Gender);
         }
         
+        /// <summary>
+        /// Assign them a gender randomly.
+        /// </summary>
         public void DetermineGender()
         {
             Gender = Gender.Female;
+
             if (RNG.Instance.RandInt(0, 2) == 1)
                 Gender = Gender.Male;  
         }
 
+        /// <summary>
+        /// Give them a spouse if suitable.
+        /// </summary>
+        /// <param name="other">The spouse in question</param>
+        /// <returns>
+        /// True if the person is suitable, false if they are not in
+        /// the right age range, is a relative or otherwise unsuitable.
+        /// </returns>
         public bool GiveSignificantOther(Person other)
         {
             if (other.Spouse != null && other.Spouse.Person.Equals(this))
@@ -63,12 +131,10 @@ namespace FightingMachines
             // Half your age plus 7 rules
             if ((Age/2) + 7 > other.Age)
             {
-                //Console.WriteLine("{0} is too young for {1} ({2} vs {3})", other.Name, Name, other.Age, Age);
                 return false;
             }
             if ((other.Age / 2) + 7 > Age)
             {
-                //Console.WriteLine("{0} is too old for {1} ({2} vs {3})", other.Name, Name, other.Age, Age);
                 return false;
             }
 
@@ -78,6 +144,11 @@ namespace FightingMachines
             return true;
         }
 
+        /// <summary>
+        /// Create a new person from the genes of this person and another.
+        /// </summary>
+        /// <param name="other">The other parent</param>
+        /// <returns>The new baby!</returns>
         public Person MakeBaby(Person other)
         {
             if (other == null && Spouse.Person != null)
@@ -128,15 +199,26 @@ namespace FightingMachines
             return baby;
         }
 
+        /// <summary>
+        /// Add the specified life event to the list.
+        /// </summary>
+        /// <param name="le"></param>
         public void AddLifeEvent(LifeEvent le)
         {
             le.MainPerson = this;
             LifeEvents.Add(le);
         }
 
-        // I was never very good at biology. I'm p sure this is how genetics work.
+        /// <summary>
+        /// Decide which gene should exist out of the two given, based on
+        /// recessiveness/dominance.
+        /// </summary>
+        /// <param name="gene1">Gene 1</param>
+        /// <param name="gene2">Gene 2</param>
+        /// <returns>The winning gene.</returns>
         public Gene FightGenes(Gene gene1, Gene gene2)
         {
+            // I was never very good at biology. I'm p sure this is how genetics work.
             var rng = new Random();
             float x = rng.Next(0, 120);
 
@@ -144,9 +226,9 @@ namespace FightingMachines
             if (x >= 100)
             {
                 if(gene1 is Eyes)
-                    return RandomEyes();
+                    return RNG.Instance.RandEyes();
                 if(gene1 is Hair)
-                    return RandomHair();
+                    return RNG.Instance.RandHair();
             }
 
             var gene1Odds = 50;
@@ -170,43 +252,35 @@ namespace FightingMachines
             return gene2;
         }
 
-        public Hair RandomHair()
-        {
-            return RNG.Instance.RandHair();
-        }
-
-        public Eyes RandomEyes()
-        {
-            return RNG.Instance.RandEyes();
-        }
-
+        /// <summary>
+        /// Age the person by a year, kill them of natural causes if they won
+        /// the lottery.
+        /// Also give them the AgeOfConsent life event if they are now old
+        /// enough.
+        /// </summary>
+        /// <param name="age_of_consent">The current age of consent.</param>
         public void AdvanceAge(int age_of_consent)
         {
             Age++;
 
             if(Age == age_of_consent)
             {
-                ReachAgeOfConsent();
+                // Reached age of consent!
+                Console.WriteLine($"{Name} came of age.");
+                AddLifeEvent(new ComingOfAge());
             }
 
-            var oneInX = CalculateDeathOdds();
+            var oneInX = DeathOdds.GetDeathChance(Age, Gender);
             if (RNG.Instance.RandInt(1, oneInX) == 1)
             {
                 Die();
             }
         }
 
-        private void ReachAgeOfConsent()
-        {
-            Console.WriteLine($"{Name} came of age.");
-            AddLifeEvent(new ComingOfAge());
-        }
-
-        private int CalculateDeathOdds()
-        {
-            return DeathOdds.GetDeathChance(Age, Gender);
-        }
-
+        /// <summary>
+        /// Rest in peace. 
+        /// Make a widow if needed.
+        /// </summary>
         private void Die()
         {
             // Widowmaker
@@ -217,7 +291,10 @@ namespace FightingMachines
             AddLifeEvent(new Death());
         }
         
-
+        /// <summary>
+        /// Checks to see if the person should be pregnant or not.
+        /// </summary>
+        /// <returns>True if they have fallen pregnant, false otherwise.</returns>
         public bool PregnancyCheck()
         {
             // If not a girl or is single, assume not pregnant

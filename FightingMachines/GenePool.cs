@@ -4,13 +4,29 @@ using System.Threading;
 
 namespace FightingMachines
 {
+    /// <summary>
+    /// A self-contained gene pool that simulates people and genetics.
+    /// </summary>
     class GenePool
     {
+        /// <summary>
+        /// A list of all live Persons currently inside the pool.
+        /// </summary>
         public List<Person> People;
+        
+        /// <summary>
+        /// The age at which Persons are allowed to have a spouse and children.
+        /// </summary>
         public int AgeOfConsent = 16;
 
+        /// <summary>
+        /// Populates the people list with the specified number of randomly
+        /// generated people, calls DateNight() and starts the main loop.
+        /// </summary>
+        /// <param name="size">The number of people to generate</param>
         public GenePool(int size)
         {
+            // Create a bunch of people
             People = new List<Person>();
 
             for (var i = 0; i < size; i++)
@@ -18,18 +34,33 @@ namespace FightingMachines
                 People.Add(new Person());
             }
 
+            // Put them in fancy clothes and make them mingle
             DateNight();
 
+            // Start the simulation!
             new Thread(Run).Start();
         }
 
+        /// <summary>
+        /// The main simulation loop.
+        /// </summary>
         private void Run()
         {
             for (var y = 0; y < int.MaxValue; y++)
             {
+                // Current year
                 Console.WriteLine("Year {0}", y);
+                
                 Thread.Sleep(1000);
-                AdvanceYear();
+
+                // Increase age, kill some people
+                AdvanceAges();
+
+                // Births
+                Births();
+
+                // New spouses
+                DateNight();
 
                 OutputStats();
 
@@ -43,18 +74,9 @@ namespace FightingMachines
             }
         }
 
-        private void AdvanceYear()
-        {
-            // Increase age, kill some people
-            AdvanceAges();
-
-            // Births
-            Births();
-
-            // New spouses
-            DateNight();
-        }
-
+        /// <summary>
+        /// Date night! Try to find everyone an eligible partner.
+        /// </summary>
         private void DateNight()
         {
             var eligiblePeople = People.FindAll(x => x.Spouse == null);
@@ -101,6 +123,10 @@ namespace FightingMachines
             }
         }
 
+        /// <summary>
+        /// Age everyone, check to see if they should have died and clean up
+        /// the bodies from the people list.
+        /// </summary>
         private void AdvanceAges()
         {
             var deadPeople = new List<Person>();
@@ -122,6 +148,9 @@ namespace FightingMachines
             }
         }
 
+        /// <summary>
+        /// Check to see if babies should be made and make them.
+        /// </summary>
         private void Births()
         {
             foreach (var person in People.FindAll(x => x.Gender == Gender.Female && x.Spouse != null))
@@ -145,6 +174,9 @@ namespace FightingMachines
             }
         }
 
+        /// <summary>
+        /// Debug output.
+        /// </summary>
         private void OutputStats()
         {
             var males = People.FindAll(x => x.Gender == Gender.Male);
