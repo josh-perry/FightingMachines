@@ -198,7 +198,7 @@ namespace FightingMachines
         private void ReachAgeOfConsent()
         {
             Console.WriteLine($"{Name} came of age.");
-            LifeEvents.Add(new ComingOfAge());
+            AddLifeEvent(new ComingOfAge());
         }
 
         private int CalculateDeathOdds()
