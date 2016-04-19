@@ -25,7 +25,7 @@ namespace FightingMachines
 
         private void Run()
         {
-            for (var y = 0; y < 1000; y++)
+            for (var y = 0; y < int.MaxValue; y++)
             {
                 Console.WriteLine("Year {0}", y);
                 Thread.Sleep(1000);
@@ -34,6 +34,12 @@ namespace FightingMachines
                 OutputStats();
 
                 TimeManager.AdvanceYear();
+
+                if (People.Count == 0)
+                {
+                    Console.WriteLine($"All life is extinguished in the year {y}!");
+                    Console.ReadKey();
+                }
             }
         }
 

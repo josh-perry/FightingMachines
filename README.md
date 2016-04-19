@@ -1,2 +1,2 @@
-# GeneSim
+# FightingMachines
 I have no idea

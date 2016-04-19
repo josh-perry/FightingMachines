@@ -82,6 +82,7 @@ namespace FightingMachines
         {
             if (other == null && Spouse.Person != null)
                 other = Spouse.Person;
+
             else if (Spouse.Person == null)
             {
                 throw new Exception("No-one to make baby with!"); // teehee
@@ -223,7 +224,7 @@ namespace FightingMachines
             if (Gender != Gender.Female || Spouse.Person == null)
                 return false;
 
-            if (Children.Count >= 2)
+            if (Children.Count >= 3)
                 return false;
 
             if (Pregnant)
