@@ -147,6 +147,53 @@ namespace FightingMachines
         }
 
         /// <summary>
+        /// Update marriage status.
+        /// </summary>
+        public void UpdateMarriages()
+        {
+            // If they don't have a spouse, don't check
+            if(Spouse == null)
+                return;
+
+            if (Spouse.Person.Dead)
+                return;
+
+            // If they're already married/not spouses, return early
+            if (Spouse.RelationType != Relation.Spouse)
+                return;
+
+            // 1 in 10 chance of getting married, if eligible
+            if (Rng.Instance.RandInt(0, 10) == 1)
+            {
+                var married = MarrySpouse();
+
+                if(married)
+                {
+                    Console.WriteLine($"{Name} and {Spouse.Person.Name} have married!");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Perform the ceremony!
+        /// </summary>
+        /// <returns>True if married, false otherwise</returns>
+        private bool MarrySpouse()
+        {
+            // If they're already married/not spouses, return early
+            if (Spouse.RelationType != Relation.Spouse)
+                return false;
+
+            if (Gender == Gender.Female)
+                Spouse.RelationType = Relation.Husband;
+            else
+                Spouse.RelationType = Relation.Wife;
+
+            //Spouse.Person.MarrySpouse();
+            return true;
+        }
+
+        /// <summary>
         /// Assign them a gender randomly.
         /// </summary>
         public void DetermineGender()
@@ -180,8 +227,8 @@ namespace FightingMachines
                 return false;
             }
 
-            Spouse = new Relationship { Person = other };
-            Spouse.Person.Spouse = new Relationship { Person = this };
+            Spouse = new Relationship { Person = other, RelationType = Relation.Spouse };
+            other.Spouse = new Relationship { Person = this, RelationType = Relation.Spouse };
             
             return true;
         }
@@ -347,6 +394,13 @@ namespace FightingMachines
 
             if (Pregnant)
                 return true;
+
+            // No babies before marriage in my utopia!
+            if (Spouse.RelationType != Relation.Husband &&
+                Spouse.RelationType != Relation.Wife)
+            {
+                return false;
+            }
 
             if (Rng.Instance.RandInt(1, 20) == 1)
             {

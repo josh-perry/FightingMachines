@@ -59,6 +59,7 @@
     <Compile Include="LifeEvents\Birth.cs" />
     <Compile Include="LifeEvents\ComingOfAge.cs" />
     <Compile Include="LifeEvents\Death.cs" />
+    <Compile Include="LifeEvents\Marriage.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

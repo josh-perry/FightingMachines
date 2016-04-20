@@ -31,6 +31,8 @@
         Father,
         Mother,
         Child,
-        Friend
+        Friend,
+        Husband,
+        Wife
     }
 }

@@ -134,6 +134,7 @@ namespace FightingMachines
             {
                 person.AdvanceAge(AgeOfConsent);
                 person.UpdateOrphanStatus();
+                person.UpdateMarriages();
 
                 if (person.Dead)
                 {
@@ -143,10 +144,10 @@ namespace FightingMachines
             }
 
             // Clean up corpses
-            foreach (var person in deadPeople)
-            {
-                People.Remove(person);
-            }
+            //foreach (var person in deadPeople)
+            //{
+            //    People.Remove(person);
+            //}
         }
 
         /// <summary>
