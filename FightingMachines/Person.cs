@@ -73,9 +73,14 @@ namespace FightingMachines
         public List<LifeEvent> LifeEvents = new List<LifeEvent>();
 
         /// <summary>
-        /// Does this person have no surviviing parents?
+        /// Does this person have no surviving parents?
         /// </summary>
         public bool Orphaned { get; set; }
+
+        /// <summary>
+        /// Intelligence.
+        /// </summary>
+        public int Iq { get; set; }
 
         /// <summary>
         /// Create a new person from mother + father's genes or entirely
@@ -101,6 +106,7 @@ namespace FightingMachines
                 Hair = Rng.Instance.RandHair();
                 Eyes = Rng.Instance.RandEyes();
                 Age = Rng.Instance.RandInt(16, 60);
+                Iq = Rng.Instance.RandInt(70, 130);
 
                 AddLifeEvent(new Birth { Year = TimeManager.Year - Age });
             }
@@ -225,7 +231,11 @@ namespace FightingMachines
                 Person = father,
                 RelationType = Relation.Father
             };
-            
+
+            var iqMin = Math.Min(mother.Iq, father.Iq) - 20;
+            var iqMax = Math.Max(mother.Iq, father.Iq) + 20;
+            baby.Iq = Rng.Instance.RandInt(Math.Min(40, iqMin), Math.Max(160, iqMax));
+
             baby.AddLifeEvent(new Birth { Year = TimeManager.Year });
             return baby;
         }
