@@ -30,7 +30,7 @@ namespace UnitTests
             var child = mother.MakeBaby(father);
             
             // Act
-            child.CheckOrphanStatus();
+            child.UpdateOrphanStatus();
 
             // Assert
             Assert.AreEqual(mother.Dead, false);
@@ -63,7 +63,7 @@ namespace UnitTests
             mother.Dead = true;
 
             // Act
-            child.CheckOrphanStatus();
+            child.UpdateOrphanStatus();
 
             // Assert
             Assert.AreEqual(mother.Dead, true);
@@ -97,7 +97,7 @@ namespace UnitTests
             father.Dead = true;
 
             // Act
-            child.CheckOrphanStatus();
+            child.UpdateOrphanStatus();
 
             // Assert
             Assert.AreEqual(mother.Dead, true);
@@ -117,7 +117,7 @@ namespace UnitTests
             };
 
             // Act
-            child.CheckOrphanStatus();
+            child.UpdateOrphanStatus();
 
             // Assert
             Assert.AreEqual(child.Orphaned, true);

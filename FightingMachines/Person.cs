@@ -102,7 +102,7 @@ namespace FightingMachines
                 Eyes = Rng.Instance.RandEyes();
                 Age = Rng.Instance.RandInt(16, 60);
 
-                AddLifeEvent(new Birth { Year = TimeManager.Year - Age});
+                AddLifeEvent(new Birth { Year = TimeManager.Year - Age });
             }
 
             Name = Rng.Instance.RandName(Gender);
@@ -119,7 +119,7 @@ namespace FightingMachines
         /// <summary>
         /// Set this person to be orphaned if there are no surviving parents.
         /// </summary>
-        public void CheckOrphanStatus()
+        public void UpdateOrphanStatus()
         {
             // If they are already orphaned, don't bother checking again!
             if (Orphaned)
@@ -326,7 +326,7 @@ namespace FightingMachines
         /// Checks to see if the person should be pregnant or not.
         /// </summary>
         /// <returns>True if they have fallen pregnant, false otherwise.</returns>
-        public bool PregnancyCheck()
+        public bool UpdatePregnancy()
         {
             // If not a girl or is single, assume not pregnant
             if (Gender != Gender.Female || Spouse.Person == null)

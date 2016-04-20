@@ -133,7 +133,7 @@ namespace FightingMachines
             foreach (var person in People)
             {
                 person.AdvanceAge(AgeOfConsent);
-                person.CheckOrphanStatus();
+                person.UpdateOrphanStatus();
 
                 if (person.Dead)
                 {
@@ -157,7 +157,7 @@ namespace FightingMachines
             foreach (var person in People.FindAll(x => x.Gender == Gender.Female && x.Spouse != null))
             {
                 // If true, make babies
-                if (!person.PregnancyCheck()) continue;
+                if (!person.UpdatePregnancy()) continue;
 
                 try
                 {
