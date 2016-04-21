@@ -81,6 +81,26 @@ namespace FightingMachines
         /// Intelligence.
         /// </summary>
         public int Iq { get; set; }
+        
+        /// <summary>
+        /// How much food they eat every tick.
+        /// </summary>
+        public int Hunger { get; set; }
+
+        /// <summary>
+        /// How much water they drink every tick.
+        /// </summary>
+        public int Thirst { get; set; }
+
+        /// <summary>
+        /// How much dosh they own.
+        /// </summary>
+        public int Money { get; set; }
+
+        /// <summary>
+        /// How much food they own.
+        /// </summary>
+        public int Food { get; set; }
 
         /// <summary>
         /// Create a new person from mother + father's genes or entirely
@@ -112,6 +132,9 @@ namespace FightingMachines
             }
 
             Name = Rng.Instance.RandName(Gender);
+            Money = Rng.Instance.RandInt(20, 100);
+            Food = Rng.Instance.RandInt(20, 100);
+            Hunger = Rng.Instance.RandInt(10, 20);
         }
 
         /// <summary>
@@ -361,6 +384,7 @@ namespace FightingMachines
             var oneInX = DeathOdds.GetDeathChance(Age, Gender);
             if (Rng.Instance.RandInt(1, oneInX) == 1)
             {
+                Console.WriteLine("{0} dies of natural causes at age {1}", Name, Age);
                 Die();
             }
         }
@@ -369,7 +393,7 @@ namespace FightingMachines
         /// Rest in peace. 
         /// Make a widow if needed.
         /// </summary>
-        private void Die()
+        public void Die()
         {
             // Widowmaker
             if (Spouse != null)

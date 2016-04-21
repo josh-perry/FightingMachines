@@ -20,6 +20,12 @@ namespace FightingMachines
         public int AgeOfConsent = 16;
 
         /// <summary>
+        /// Money "on the ground" from death etc.
+        /// Can be randomly taken by people.
+        /// </summary>
+        public int MoneyInFlux { get; set; }
+
+        /// <summary>
         /// Populates the people list with the specified number of randomly
         /// generated people, calls DateNight() and starts the main loop.
         /// </summary>
@@ -36,6 +42,7 @@ namespace FightingMachines
 
             // Put them in fancy clothes and make them mingle
             DateNight();
+            FarmFood();
 
             // Start the simulation!
             new Thread(Run).Start();
@@ -62,6 +69,18 @@ namespace FightingMachines
                 // New spouses
                 DateNight();
 
+                // Random transactions
+                MoneyTransactions();
+
+                // Eat food
+                EatFood();
+
+                // Distribute money in flux
+                UpdateMoneyInFlux();
+
+                // Foraging
+                FarmFood();
+
                 OutputStats();
 
                 TimeManager.AdvanceYear();
@@ -71,6 +90,79 @@ namespace FightingMachines
                     Console.WriteLine($"All life is extinguished in the year {y}!");
                     Console.ReadKey();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Give food randomly.
+        /// </summary>
+        private void FarmFood()
+        {
+            for (var i = 0; i < 50; i++)
+            {
+                var person = People[Rng.Instance.RandInt(0, People.Count)];
+                var moneyToTake = Rng.Instance.RandInt(0, MoneyInFlux);
+
+                person.Food += Rng.Instance.RandInt(0, 200);
+            }
+        }
+
+        /// <summary>
+        /// Take money randomly from the pool.
+        /// </summary>
+        private void UpdateMoneyInFlux()
+        {
+            for(var i = 0; i < 10; i++)
+            {
+                var person = People[Rng.Instance.RandInt(0, People.Count)];
+                var moneyToTake = Rng.Instance.RandInt(0, MoneyInFlux);
+
+                person.Money += moneyToTake;
+                MoneyInFlux -= moneyToTake;
+            }
+        }
+
+        /// <summary>
+        /// Make random transactions between people in exchange for food and water.
+        /// </summary>
+        private void MoneyTransactions()
+        {
+            foreach (var person in People)
+            {
+                var peopleWithMoreFood = People.FindAll(x => x.Food > person.Food && x.Food > x.Hunger);
+                var maximum = peopleWithMoreFood.Count;
+
+                // Nobody has more food, don't buy anything
+                if (maximum == 0)
+                    break;
+
+                var personToBuyFoodFrom = peopleWithMoreFood[Rng.Instance.RandInt(0, maximum)];
+
+                var foodToBuy = Math.Min(person.Hunger, person.Money);
+                var payment = foodToBuy;
+
+                personToBuyFoodFrom.Money += payment;
+                person.Money -= payment;
+            }
+        }
+
+        /// <summary>
+        /// Eat food.
+        /// </summary>
+        private void EatFood()
+        {
+            foreach(var person in People)
+            {
+                if (person.Dead) continue;
+
+                if (person.Food < person.Hunger)
+                {
+                    Console.WriteLine("{0} dies of starvation at age {1}", person.Name, person.Age);
+                    person.Die();
+                    continue;
+                }
+
+                person.Food -= person.Hunger;
             }
         }
 
@@ -138,7 +230,6 @@ namespace FightingMachines
 
                 if (person.Dead)
                 {
-                    Console.WriteLine("{0} dies of natural causes at age {1}", person.Name, person.Age);
                     deadPeople.Add(person);
                 }
             }
@@ -181,13 +272,13 @@ namespace FightingMachines
         /// </summary>
         private void OutputStats()
         {
-            var males = People.FindAll(x => x.Gender == Gender.Male);
-            var females = People.FindAll(x => x.Gender == Gender.Female);
+            var males = People.FindAll(x => x.Gender == Gender.Male && !x.Dead);
+            var females = People.FindAll(x => x.Gender == Gender.Female && !x.Dead);
             var eligibleMales = males.FindAll(x => x.Spouse == null);
             var eligibleFemales = females.FindAll(x => x.Spouse == null);
 
             Console.WriteLine("All");
-            Console.WriteLine("\tTotal:        " + People.Count);
+            Console.WriteLine("\tTotal:        " + males.Count + females.Count);
             Console.WriteLine("");
             Console.WriteLine("Males");
             Console.WriteLine("\tTotal:        " + males.Count);
